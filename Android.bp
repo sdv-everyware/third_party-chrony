@@ -1,0 +1,109 @@
+// chrony for Android devices without the framework (no NetworkTimeUpdateService).
+// Upstream sources unchanged; the Android parts are this file and android/.
+
+package {
+    default_applicable_licenses: ["vendor_sdv_smarthome_chrony_license"],
+}
+
+license {
+    name: "vendor_sdv_smarthome_chrony_license",
+    visibility: [":__subpackages__"],
+    license_kinds: ["SPDX-license-identifier-GPL-2.0-only"],
+    license_text: ["COPYING"],
+}
+
+cc_defaults {
+    name: "chrony_defaults",
+    product_specific: true,
+    // android/config.h is found as "config.h" (sysincl.h includes it).
+    local_include_dirs: ["android"],
+    // Not the source directory itself: chrony has its own sched.h (its event scheduler),
+    // which would shadow libc's <sched.h> for bionic's pthread.h. chrony includes its own
+    // headers with "", found next to the source anyway, as in the upstream Makefile.
+    include_build_directory: false,
+    cflags: [
+        "-include bionic_compat.h",
+        "-Wall",
+        "-Wno-missing-field-initializers",
+        "-Wno-sign-compare",
+        "-Wno-unused-parameter",
+    ],
+}
+
+cc_binary {
+    name: "chronyd",
+    defaults: ["chrony_defaults"],
+    srcs: [
+        // OBJS and EXTRA_OBJS of the configured Makefile.
+        "addrfilt.c",
+        "array.c",
+        "clientlog.c",
+        "cmdparse.c",
+        "conf.c",
+        "keys.c",
+        "leapdb.c",
+        "local.c",
+        "logging.c",
+        "main.c",
+        "memory.c",
+        "nameserv.c",
+        "nameserv_async.c",
+        "ntp_auth.c",
+        "ntp_core.c",
+        "ntp_ext.c",
+        "ntp_io.c",
+        "ntp_sources.c",
+        "quantiles.c",
+        "reference.c",
+        "regress.c",
+        "rtc.c",
+        "samplefilt.c",
+        "sched.c",
+        "socket.c",
+        "sources.c",
+        "sourcestats.c",
+        "stubs.c",
+        "smooth.c",
+        "sys.c",
+        "sys_null.c",
+        "tempcomp.c",
+        "util.c",
+        "sys_generic.c",
+        "sys_linux.c",
+        "sys_timex.c",
+        "sys_posix.c",
+        "cmdmon.c",
+        "manual.c",
+        "pktlength.c",
+        "hwclock.c",
+        "ntp_io_linux.c",
+        "rtc_linux.c",
+        "hash_intmd5.c",
+    ],
+    init_rc: ["android/chronyd.rc"],
+    required: ["chrony.conf"],
+}
+
+cc_binary {
+    name: "chronyc",
+    defaults: ["chrony_defaults"],
+    srcs: [
+        // CLI_OBJS of the configured Makefile.
+        "array.c",
+        "client.c",
+        "cmdparse.c",
+        "getdate.c",
+        "memory.c",
+        "nameserv.c",
+        "pktlength.c",
+        "socket.c",
+        "util.c",
+        "hash_intmd5.c",
+    ],
+}
+
+prebuilt_etc {
+    name: "chrony.conf",
+    src: "android/chrony.conf",
+    product_specific: true,
+}

@@ -1,0 +1,15 @@
+# chronyd: system time over NTP. -n stays in the foreground for init, logs go to syslog
+# (logd); -U because it runs as system with CAP_SYS_TIME instead of root.
+service chronyd /product/bin/chronyd -n -U -f /product/etc/chrony.conf
+    user system
+    group system inet
+    capabilities SYS_TIME
+    disabled
+
+on post-fs-data
+    mkdir /data/misc/chrony 0770 system system
+    mkdir /data/misc/chrony/run 0770 system system
+
+# SDV init has no class_start, services are started by name.
+on boot
+    start chronyd

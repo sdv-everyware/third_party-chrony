@@ -1,0 +1,1 @@
+/(product|system/product)/bin/chronyd    u:object_r:sdv_chronyd_exec:s0

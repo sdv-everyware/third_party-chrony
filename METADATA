@@ -1,0 +1,14 @@
+name: "chrony"
+description: "NTP client and server (https://chrony-project.org)"
+third_party {
+  url {
+    type: ARCHIVE
+    value: "https://chrony-project.org/releases/chrony-4.9.tar.gz"
+  }
+  version: "4.9"
+  license_type: RESTRICTED
+  last_upgrade_date { year: 2026 month: 11 day: 3 }
+  # sha256 4924c6f530105bcd5b9e9e33c48a2ae1bfd889222c8480bc41601110efc864d0, signature
+  # chrony-4.9-tar-gz-asc.txt by Miroslav Lichvar, key 8F37 5C7E 8D0E E125 A3D3
+  # BD51 537E 2B76 F768 0DAC: good.
+}

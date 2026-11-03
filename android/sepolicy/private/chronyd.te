@@ -1,0 +1,6 @@
+# chronyd (/product/bin/chronyd). Permissive until the policy is written from the denials
+# of a running device.
+type sdv_chronyd, domain, coredomain;
+type sdv_chronyd_exec, system_file_type, exec_type, file_type;
+init_daemon_domain(sdv_chronyd)
+permissive sdv_chronyd;
