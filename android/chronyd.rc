@@ -1,6 +1,10 @@
 # chronyd: system time over NTP. -n stays in the foreground for init, logs go to syslog
 # (logd); -U because it runs as system with CAP_SYS_TIME instead of root.
-service chronyd /product/bin/chronyd -n -U -f /product/etc/chrony.conf
+# -s: at its start the clock goes to the time chronyd last wrote its drift file (every hour
+# and when it stops) when that is later than the clock: the RB3's RTC (PM8998, no battery)
+# does not keep the time (rtcsync does not change it), and TLS needs a clock past 1970 before
+# the first NTP answer, seconds after the network is up.
+service chronyd /product/bin/chronyd -n -U -s -f /product/etc/chrony.conf
     user system
     group system inet
     capabilities SYS_TIME
@@ -10,6 +14,7 @@ on post-fs-data
     mkdir /data/misc/chrony 0770 system system
     mkdir /data/misc/chrony/run 0770 system system
 
-# SDV init has no class_start, services are started by name.
-on boot
-    start chronyd
+# SDV init has no class_start, services are started by name. The product starts chronyd: -s
+# has to come after the kernel has set the clock from the RTC (CONFIG_RTC_HCTOSYS, when the RTC's
+# driver registers), or the kernel puts the clock back to the RTC's time after chronyd restored
+# it (device/rb3/sdv_media_db845c/init.sdv_db845c.rc).
