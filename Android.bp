@@ -2,11 +2,11 @@
 // Upstream sources unchanged; the Android parts are this file and android/.
 
 package {
-    default_applicable_licenses: ["vendor_sdv_smarthome_chrony_license"],
+    default_applicable_licenses: ["vendor_sdv_everyware_chrony_license"],
 }
 
 license {
-    name: "vendor_sdv_smarthome_chrony_license",
+    name: "vendor_sdv_everyware_chrony_license",
     visibility: [":__subpackages__"],
     license_kinds: ["SPDX-license-identifier-GPL-2.0-only"],
     license_text: ["COPYING"],
@@ -105,5 +105,12 @@ cc_binary {
 prebuilt_etc {
     name: "chrony.conf",
     src: "android/chrony.conf",
+    product_specific: true,
+}
+
+// Run by init on a DHCP lease: chronyd resolves its servers again (android/chrony_refresh.sh).
+sh_binary {
+    name: "chrony_refresh.sh",
+    src: "android/chrony_refresh.sh",
     product_specific: true,
 }

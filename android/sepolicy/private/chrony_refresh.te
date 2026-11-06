@@ -1,0 +1,6 @@
+# chrony_refresh.sh (android/chrony_refresh.sh), run by init when an interface has a DHCP
+# lease. Permissive like chronyd until the policy is written from a running device.
+type sdv_chrony_refresh, domain, coredomain;
+type sdv_chrony_refresh_exec, system_file_type, exec_type, file_type;
+init_daemon_domain(sdv_chrony_refresh)
+permissive sdv_chrony_refresh;

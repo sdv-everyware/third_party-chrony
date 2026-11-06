@@ -1,1 +1,2 @@
 /(product|system/product)/bin/chronyd    u:object_r:sdv_chronyd_exec:s0
+/(product|system/product)/bin/chrony_refresh\.sh    u:object_r:sdv_chrony_refresh_exec:s0
