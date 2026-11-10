@@ -13,6 +13,11 @@ service chronyd /product/bin/chronyd -n -U -s -f /product/etc/chrony.conf
 on post-fs-data
     mkdir /data/misc/chrony 0770 system system
     mkdir /data/misc/chrony/run 0770 system system
+    # The pidfile outlives a reboot on /data, and chronyd refuses to start while a process
+    # with the pid in it exists: after a reboot that pid belongs to someone else (the boot is
+    # the same every time, so it nearly always does), and init restarts chronyd every 5 s for
+    # nothing. A fresh boot has no chronyd yet: the file is stale by definition.
+    rm /data/misc/chrony/run/chronyd.pid
 
 # SDV init has no class_start, services are started by name. The product starts chronyd: -s
 # has to come after the kernel has set the clock from the RTC (CONFIG_RTC_HCTOSYS, when the RTC's
